@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Components
     public static PlayerController instance;
-
-    private Animator theAnim;
-    private Rigidbody2D theRB;
-
     public float moveSpeed;
+
     [Header("Jump Info")]
     public float jumpForce;
     public Transform groundPoint;
     public LayerMask groundCheck;
 
+    [Header("Bullet Info")]
+    public BulletController shotToFire;
+    public Transform shotPoint;
+
+    private Animator theAnim;
+    private Rigidbody2D theRB;
     private bool isOnGround;
+    #endregion
 
     private void Awake()
     {
@@ -26,6 +31,17 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMovementAndAnimationController();
+        PlayerFireWeapon();
+    }
+
+    private void PlayerFireWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Instantiate(shotToFire, shotPoint.position, shotPoint.rotation).moveDirection = new Vector2(transform.localScale.x, 0f);
+
+            theAnim.SetTrigger("shotFired");
+        }
     }
 
     private void PlayerMovementAndAnimationController()
