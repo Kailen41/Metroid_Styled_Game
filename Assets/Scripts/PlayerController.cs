@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Animator theAnim;
     private Rigidbody2D theRB;
     private bool isOnGround;
+    private bool canDoubleJump;
     #endregion
 
     private void Awake()
@@ -63,8 +64,19 @@ public class PlayerController : MonoBehaviour
         isOnGround = Physics2D.OverlapCircle(groundPoint.position, 0.2f, groundCheck);
 
         // Jumping
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
+        if (Input.GetKeyDown(KeyCode.Space) && (isOnGround || canDoubleJump))
         {
+            if (isOnGround)
+            {
+                canDoubleJump = true;
+            }
+            else
+            {
+                canDoubleJump = false;
+
+                theAnim.SetTrigger("doubleJump");
+            }
+
             theRB.velocity = new Vector2(theRB.velocity.x, jumpForce);
         }
         
